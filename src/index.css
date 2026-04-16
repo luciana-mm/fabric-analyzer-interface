@@ -6,38 +6,38 @@
 
 @layer base {
   :root {
-    --background: 210 30% 8%;
-    --foreground: 190 80% 90%;
+    --background: 230 86% 3%;
+    --foreground: 232 10% 92%;
 
-    --card: 210 25% 12%;
-    --card-foreground: 190 80% 90%;
+    --card: 230 40% 8%;
+    --card-foreground: 232 10% 92%;
 
-    --popover: 210 25% 12%;
-    --popover-foreground: 190 80% 90%;
+    --popover: 230 40% 8%;
+    --popover-foreground: 232 10% 92%;
 
-    --primary: 185 70% 50%;
-    --primary-foreground: 210 30% 8%;
+    --primary: 232 10% 92%;
+    --primary-foreground: 230 86% 3%;
 
-    --secondary: 210 20% 18%;
-    --secondary-foreground: 190 60% 80%;
+    --secondary: 228 4% 53%;
+    --secondary-foreground: 232 10% 92%;
 
-    --muted: 210 20% 15%;
-    --muted-foreground: 210 15% 55%;
+    --muted: 230 30% 12%;
+    --muted-foreground: 228 4% 53%;
 
-    --accent: 185 70% 50%;
-    --accent-foreground: 210 30% 8%;
+    --accent: 230 5% 73%;
+    --accent-foreground: 230 86% 3%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 232 10% 92%;
 
-    --border: 185 30% 20%;
-    --input: 210 20% 18%;
-    --ring: 185 70% 50%;
+    --border: 228 4% 33%;
+    --input: 230 30% 12%;
+    --ring: 232 10% 92%;
 
     --radius: 0.75rem;
 
-    --glow-primary: 0 0 20px hsl(185 70% 50% / 0.3);
-    --glow-strong: 0 0 30px hsl(185 70% 50% / 0.5);
+    --glow-primary: 0 0 20px hsl(232 10% 92% / 0.15);
+    --glow-strong: 0 0 30px hsl(232 10% 92% / 0.25);
 
     --font-display: 'Orbitron', monospace;
     --font-body: 'Inter', sans-serif;
