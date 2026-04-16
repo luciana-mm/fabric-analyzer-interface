@@ -67,7 +67,7 @@ const Index = () => {
       {/* Status bar */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 text-xs text-muted-foreground z-10">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           <span>Sistema Pronto</span>
         </div>
         <span className="text-border">|</span>
