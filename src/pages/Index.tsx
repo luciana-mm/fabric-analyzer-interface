@@ -1,5 +1,7 @@
-import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle } from "lucide-react";
+import { useState } from "react";
+import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock } from "lucide-react";
 import { LucideIcon } from "lucide-react";
+import { toast } from "sonner";
 import gridBg from "@/assets/grid-bg.jpg";
 
 interface StatCardProps {
@@ -39,21 +41,32 @@ interface ActionCardProps {
   description: string;
   onClick?: () => void;
   highlight?: boolean;
+  disabled?: boolean;
+  badge?: string;
 }
 
-const ActionCard = ({ icon: Icon, label, description, onClick, highlight }: ActionCardProps) => (
+const ActionCard = ({ icon: Icon, label, description, onClick, highlight, disabled, badge }: ActionCardProps) => (
   <button
     onClick={onClick}
+    disabled={disabled}
     className={`group relative flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border transition-all duration-300 text-center
-      ${highlight
+      ${disabled
+        ? "bg-card/20 border-border/20 opacity-50 cursor-not-allowed"
+        : highlight
         ? "bg-foreground/10 border-foreground/30 glow-primary hover:bg-foreground/15"
         : "bg-card/50 border-border/30 hover:border-foreground/20 hover:bg-card/80"
-      } active:scale-[0.97]`}
+      } ${!disabled && "active:scale-[0.97]"}`}
   >
+    {badge && (
+      <span className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/60 border border-border/40 text-[9px] tracking-[0.2em] uppercase text-muted-foreground">
+        <Lock className="w-2.5 h-2.5" />
+        {badge}
+      </span>
+    )}
     <div className={`w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-300
-      ${highlight ? "bg-foreground/15" : "bg-muted/60 group-hover:bg-foreground/10"}`}>
+      ${highlight && !disabled ? "bg-foreground/15" : "bg-muted/60 group-hover:bg-foreground/10"}`}>
       <Icon className={`w-8 h-8 transition-all duration-300
-        ${highlight ? "text-foreground" : "text-secondary group-hover:text-foreground"}`} />
+        ${highlight && !disabled ? "text-foreground" : "text-secondary group-hover:text-foreground"}`} />
     </div>
     <div>
       <p className="font-display text-sm tracking-[0.2em] uppercase text-foreground/90">{label}</p>
@@ -63,6 +76,25 @@ const ActionCard = ({ icon: Icon, label, description, onClick, highlight }: Acti
 );
 
 const Index = () => {
+  const [calibrated, setCalibrated] = useState(false);
+
+  const handleCalibrate = () => {
+    setCalibrated(true);
+    toast.success("Luz calibrada com sucesso", {
+      description: "O sistema está pronto para iniciar a análise.",
+    });
+  };
+
+  const handleStart = () => {
+    if (!calibrated) {
+      toast.error("Calibração necessária", {
+        description: "Execute a calibração da luz antes de iniciar.",
+      });
+      return;
+    }
+    toast.success("Análise iniciada");
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Background */}
@@ -87,8 +119,8 @@ const Index = () => {
 
         <div className="flex items-center gap-5 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span>Sistema Pronto</span>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${calibrated ? "bg-primary" : "bg-muted-foreground"}`} />
+            <span>{calibrated ? "Sistema Pronto" : "Aguardando Calibração"}</span>
           </div>
           <span className="px-4 py-1.5 rounded-full bg-muted/40 border border-border/30 font-display text-[11px] tracking-wider">
             v1.0.0
@@ -110,13 +142,17 @@ const Index = () => {
             <ActionCard
               icon={Play}
               label="Iniciar"
-              description="Começar análise"
+              description={calibrated ? "Começar análise" : "Calibre a luz primeiro"}
               highlight
+              disabled={!calibrated}
+              badge={!calibrated ? "Bloqueado" : undefined}
+              onClick={handleStart}
             />
             <ActionCard
-              icon={Sun}
+              icon={calibrated ? CheckCircle2 : Sun}
               label="Calibrar Luz"
-              description="Ajustar iluminação"
+              description={calibrated ? "Calibração concluída" : "Ajustar iluminação"}
+              onClick={handleCalibrate}
             />
             <ActionCard
               icon={Settings}
