@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock } from "lucide-react";
+import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock, BarChart3 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 import gridBg from "@/assets/grid-bg.jpg";
+import { StatsDetailsDialog } from "@/components/StatsDetailsDialog";
 
 interface StatCardProps {
   icon: LucideIcon;
@@ -77,6 +78,7 @@ const ActionCard = ({ icon: Icon, label, description, onClick, highlight, disabl
 
 const Index = () => {
   const [calibrated, setCalibrated] = useState(false);
+  const [statsOpen, setStatsOpen] = useState(false);
 
   const handleCalibrate = () => {
     setCalibrated(true);
@@ -163,14 +165,18 @@ const Index = () => {
 
           {/* Stats Section */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="font-display text-[11px] tracking-[0.4em] text-muted-foreground uppercase">
+            <div className="flex items-center justify-between gap-4">
+              <p className="font-display text-[11px] tracking-[0.4em] text-muted-foreground uppercase whitespace-nowrap">
                 Estatísticas de Análise
               </p>
-              <div className="flex-1 mx-4 h-px bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
-              <p className="font-display text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
-                Sessão Atual
-              </p>
+              <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
+              <button
+                onClick={() => setStatsOpen(true)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40 border border-border/30 hover:bg-muted/60 hover:border-foreground/30 transition-all font-display text-[10px] tracking-[0.2em] uppercase text-foreground/80"
+              >
+                <BarChart3 className="w-3 h-3" />
+                Ver Detalhes
+              </button>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -201,6 +207,8 @@ const Index = () => {
 
       {/* Bottom accent line */}
       <div className="relative z-10 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+
+      <StatsDetailsDialog open={statsOpen} onOpenChange={setStatsOpen} />
     </div>
   );
 };
