@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock, BarChart3, Users } from "lucide-react";
+import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock, BarChart3, LogOut } from "lucide-react";
 import { LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import gridBg from "@/assets/grid-bg.jpg";
 import { StatsDetailsDialog } from "@/components/StatsDetailsDialog";
+import { useAuth } from "@/hooks/useAuth";
 
 interface StatCardProps {
   icon: LucideIcon;
@@ -81,8 +82,15 @@ const Index = () => {
   const [calibrated, setCalibrated] = useState(false);
   const [configured, setConfigured] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
 
   const isReady = calibrated && configured;
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/", { replace: true });
+  };
 
   const handleCalibrate = () => {
     setCalibrated(true);
@@ -159,13 +167,18 @@ const Index = () => {
                 : "Aguardando Configuração"}
             </span>
           </div>
-          <Link
-            to="/gestor"
+          {user?.email && (
+            <span className="hidden md:inline text-[11px] text-muted-foreground tracking-wider">
+              {user.email}
+            </span>
+          )}
+          <button
+            onClick={handleSignOut}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/40 border border-border/30 hover:bg-muted/60 hover:border-foreground/30 transition-all font-display text-[10px] tracking-[0.25em] uppercase text-foreground/80"
           >
-            <Users className="w-3 h-3" />
-            Painel do Gestor
-          </Link>
+            <LogOut className="w-3 h-3" />
+            Sair
+          </button>
           <span className="px-4 py-1.5 rounded-full bg-muted/40 border border-border/30 font-display text-[11px] tracking-wider">
             v1.0.0
           </span>

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Users, Layers, CheckCircle2, XCircle, TrendingUp, Award, Clock, BarChart3, ArrowLeft, Search } from "lucide-react";
+import { Users, Layers, CheckCircle2, XCircle, TrendingUp, Award, Clock, BarChart3, LogOut, Search } from "lucide-react";
 import { LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 import gridBg from "@/assets/grid-bg.jpg";
 import { EmployeeDetailsDialog, Employee } from "@/components/EmployeeDetailsDialog";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface OverviewCardProps {
   icon: LucideIcon;
@@ -46,6 +47,13 @@ const employees: Employee[] = [
 const Manager = () => {
   const [selected, setSelected] = useState<Employee | null>(null);
   const [search, setSearch] = useState("");
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/", { replace: true });
+  };
 
   const totalVerified = employees.reduce((s, e) => s + e.verified, 0);
   const totalSuccess = employees.reduce((s, e) => s + e.success, 0);
@@ -79,13 +87,18 @@ const Manager = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link
-            to="/"
+          {user?.email && (
+            <span className="hidden md:inline text-[11px] text-muted-foreground tracking-wider">
+              {user.email}
+            </span>
+          )}
+          <button
+            onClick={handleSignOut}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/40 border border-border/30 hover:bg-muted/60 hover:border-foreground/30 transition-all font-display text-[10px] tracking-[0.25em] uppercase text-foreground/80"
           >
-            <ArrowLeft className="w-3 h-3" />
-            Operação
-          </Link>
+            <LogOut className="w-3 h-3" />
+            Sair
+          </button>
           <span className="px-4 py-1.5 rounded-full bg-muted/40 border border-border/30 font-display text-[11px] tracking-wider text-muted-foreground">
             Gestão · v1.0.0
           </span>
