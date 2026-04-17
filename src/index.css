@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.cdnfonts.com/css/alter');
 
 @tailwind base;
 @tailwind components;
@@ -39,8 +39,8 @@
     --glow-primary: 0 0 20px hsl(232 10% 92% / 0.15);
     --glow-strong: 0 0 30px hsl(232 10% 92% / 0.25);
 
-    --font-display: 'Orbitron', monospace;
-    --font-body: 'Inter', sans-serif;
+    --font-display: 'Alter', sans-serif;
+    --font-body: 'Alter', sans-serif;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
