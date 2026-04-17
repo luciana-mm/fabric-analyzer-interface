@@ -47,6 +47,13 @@ const employees: Employee[] = [
 const Manager = () => {
   const [selected, setSelected] = useState<Employee | null>(null);
   const [search, setSearch] = useState("");
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/", { replace: true });
+  };
 
   const totalVerified = employees.reduce((s, e) => s + e.verified, 0);
   const totalSuccess = employees.reduce((s, e) => s + e.success, 0);
