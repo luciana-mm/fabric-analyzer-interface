@@ -1,6 +1,37 @@
-import { Play, Sun, Settings, Microscope } from "lucide-react";
+import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import gridBg from "@/assets/grid-bg.jpg";
+
+interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  sublabel?: string;
+  accent?: "default" | "success" | "danger";
+}
+
+const StatCard = ({ icon: Icon, label, value, sublabel, accent = "default" }: StatCardProps) => {
+  const accentClasses = {
+    default: "text-foreground",
+    success: "text-primary",
+    danger: "text-destructive",
+  }[accent];
+
+  return (
+    <div className="relative flex items-center gap-4 p-5 rounded-xl border border-border/30 bg-card/40 backdrop-blur-sm">
+      <div className={`w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center ${accentClasses}`}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-display text-[10px] tracking-[0.25em] uppercase text-muted-foreground">{label}</p>
+        <div className="flex items-baseline gap-2 mt-1">
+          <p className={`font-display text-2xl tracking-wider ${accentClasses}`}>{value}</p>
+          {sublabel && <p className="text-[10px] text-muted-foreground tracking-wider uppercase">{sublabel}</p>}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ActionCardProps {
   icon: LucideIcon;
@@ -67,7 +98,7 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-10">
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-5xl">
           <div className="text-center mb-10">
             <p className="font-display text-[11px] tracking-[0.4em] text-muted-foreground uppercase mb-3">
               Painel de Controle
@@ -75,7 +106,7 @@ const Index = () => {
             <div className="w-20 h-px bg-gradient-to-r from-transparent via-foreground/30 to-transparent mx-auto" />
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-6 mb-10">
             <ActionCard
               icon={Play}
               label="Iniciar"
@@ -92,6 +123,42 @@ const Index = () => {
               label="Configurações"
               description="Parâmetros do sistema"
             />
+          </div>
+
+          {/* Stats Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="font-display text-[11px] tracking-[0.4em] text-muted-foreground uppercase">
+                Estatísticas de Análise
+              </p>
+              <div className="flex-1 mx-4 h-px bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
+              <p className="font-display text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                Sessão Atual
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <StatCard
+                icon={Layers}
+                label="Tecidos Verificados"
+                value="1.248"
+                sublabel="total"
+              />
+              <StatCard
+                icon={CheckCircle2}
+                label="Taxa de Sucesso"
+                value="94.6%"
+                sublabel="1.181 ok"
+                accent="success"
+              />
+              <StatCard
+                icon={XCircle}
+                label="Taxa de Erro"
+                value="5.4%"
+                sublabel="67 falhas"
+                accent="danger"
+              />
+            </div>
           </div>
         </div>
       </main>
