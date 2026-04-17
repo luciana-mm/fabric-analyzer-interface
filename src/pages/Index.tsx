@@ -1,6 +1,37 @@
-import { Play, Sun, Settings, Microscope } from "lucide-react";
+import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import gridBg from "@/assets/grid-bg.jpg";
+
+interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  sublabel?: string;
+  accent?: "default" | "success" | "danger";
+}
+
+const StatCard = ({ icon: Icon, label, value, sublabel, accent = "default" }: StatCardProps) => {
+  const accentClasses = {
+    default: "text-foreground",
+    success: "text-primary",
+    danger: "text-destructive",
+  }[accent];
+
+  return (
+    <div className="relative flex items-center gap-4 p-5 rounded-xl border border-border/30 bg-card/40 backdrop-blur-sm">
+      <div className={`w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center ${accentClasses}`}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-display text-[10px] tracking-[0.25em] uppercase text-muted-foreground">{label}</p>
+        <div className="flex items-baseline gap-2 mt-1">
+          <p className={`font-display text-2xl tracking-wider ${accentClasses}`}>{value}</p>
+          {sublabel && <p className="text-[10px] text-muted-foreground tracking-wider uppercase">{sublabel}</p>}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ActionCardProps {
   icon: LucideIcon;
