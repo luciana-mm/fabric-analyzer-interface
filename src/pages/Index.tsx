@@ -207,6 +207,8 @@ const Index = () => {
 
       {/* Bottom accent line */}
       <div className="relative z-10 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+
+      <StatsDetailsDialog open={statsOpen} onOpenChange={setStatsOpen} />
     </div>
   );
 };
