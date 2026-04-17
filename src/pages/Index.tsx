@@ -78,24 +78,50 @@ const ActionCard = ({ icon: Icon, label, description, onClick, highlight, disabl
 
 const Index = () => {
   const [calibrated, setCalibrated] = useState(false);
+  const [configured, setConfigured] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
+
+  const isReady = calibrated && configured;
 
   const handleCalibrate = () => {
     setCalibrated(true);
     toast.success("Luz calibrada com sucesso", {
-      description: "O sistema está pronto para iniciar a análise.",
+      description: configured
+        ? "O sistema está pronto para iniciar a análise."
+        : "Agora conclua as configurações do sistema.",
+    });
+  };
+
+  const handleConfigure = () => {
+    setConfigured(true);
+    toast.success("Configurações concluídas", {
+      description: calibrated
+        ? "O sistema está pronto para iniciar a análise."
+        : "Agora calibre a luz para liberar o início.",
     });
   };
 
   const handleStart = () => {
-    if (!calibrated) {
-      toast.error("Calibração necessária", {
-        description: "Execute a calibração da luz antes de iniciar.",
+    if (!isReady) {
+      toast.error("Pré-requisitos pendentes", {
+        description: !calibrated && !configured
+          ? "Calibre a luz e conclua as configurações antes de iniciar."
+          : !calibrated
+          ? "Execute a calibração da luz antes de iniciar."
+          : "Conclua as configurações antes de iniciar.",
       });
       return;
     }
     toast.success("Análise iniciada");
   };
+
+  const startDescription = isReady
+    ? "Começar análise"
+    : !calibrated && !configured
+    ? "Calibre a luz e configure"
+    : !calibrated
+    ? "Calibre a luz primeiro"
+    : "Conclua as configurações";
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
@@ -121,8 +147,16 @@ const Index = () => {
 
         <div className="flex items-center gap-5 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full animate-pulse ${calibrated ? "bg-primary" : "bg-muted-foreground"}`} />
-            <span>{calibrated ? "Sistema Pronto" : "Aguardando Calibração"}</span>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? "bg-primary" : "bg-muted-foreground"}`} />
+            <span>
+              {isReady
+                ? "Sistema Pronto"
+                : !calibrated && !configured
+                ? "Aguardando Calibração e Configuração"
+                : !calibrated
+                ? "Aguardando Calibração"
+                : "Aguardando Configuração"}
+            </span>
           </div>
           <span className="px-4 py-1.5 rounded-full bg-muted/40 border border-border/30 font-display text-[11px] tracking-wider">
             v1.0.0
@@ -144,10 +178,10 @@ const Index = () => {
             <ActionCard
               icon={Play}
               label="Iniciar"
-              description={calibrated ? "Começar análise" : "Calibre a luz primeiro"}
+              description={startDescription}
               highlight
-              disabled={!calibrated}
-              badge={!calibrated ? "Bloqueado" : undefined}
+              disabled={!isReady}
+              badge={!isReady ? "Bloqueado" : undefined}
               onClick={handleStart}
             />
             <ActionCard
@@ -157,9 +191,10 @@ const Index = () => {
               onClick={handleCalibrate}
             />
             <ActionCard
-              icon={Settings}
+              icon={configured ? CheckCircle2 : Settings}
               label="Configurações"
-              description="Parâmetros do sistema"
+              description={configured ? "Configurações concluídas" : "Parâmetros do sistema"}
+              onClick={handleConfigure}
             />
           </div>
 
