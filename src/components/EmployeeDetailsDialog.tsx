@@ -1,6 +1,7 @@
 import { CheckCircle2, XCircle, Layers, Clock, TrendingUp, AlertTriangle, User } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import type { BreakdownItem, RecentAnalysisItem } from "@/lib/dashboard";
 
 export interface Employee {
   id: string;
@@ -17,24 +18,17 @@ interface EmployeeDetailsDialogProps {
   employee: Employee | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  errorBreakdown: BreakdownItem[];
+  recentAnalyses: RecentAnalysisItem[];
 }
 
-const errorBreakdown = [
-  { label: "Falha de iluminação", percentage: 38.2 },
-  { label: "Tecido fora de posição", percentage: 29.7 },
-  { label: "Padrão não reconhecido", percentage: 19.4 },
-  { label: "Outros", percentage: 12.7 },
-];
-
-const recentAnalyses = [
-  { id: "TX-1248", type: "Algodão", result: "ok", time: "há 2 min" },
-  { id: "TX-1247", type: "Poliéster", result: "ok", time: "há 6 min" },
-  { id: "TX-1246", type: "Linho", result: "fail", time: "há 11 min" },
-  { id: "TX-1245", type: "Seda", result: "ok", time: "há 14 min" },
-  { id: "TX-1244", type: "Algodão", result: "ok", time: "há 18 min" },
-];
-
-export const EmployeeDetailsDialog = ({ employee, open, onOpenChange }: EmployeeDetailsDialogProps) => {
+export const EmployeeDetailsDialog = ({
+  employee,
+  open,
+  onOpenChange,
+  errorBreakdown,
+  recentAnalyses,
+}: EmployeeDetailsDialogProps) => {
   if (!employee) return null;
 
   const successRate = ((employee.success / employee.verified) * 100).toFixed(1);
@@ -104,19 +98,25 @@ export const EmployeeDetailsDialog = ({ employee, open, onOpenChange }: Employee
             <h3 className="font-display text-[11px] tracking-[0.3em] uppercase text-muted-foreground mb-3 flex items-center gap-2">
               <AlertTriangle className="w-3.5 h-3.5" /> Principais Causas de Falha
             </h3>
-            <div className="space-y-3 p-4 rounded-lg border border-border/40 bg-card/50">
-              {errorBreakdown.map((item) => (
-                <div key={item.label}>
-                  <div className="flex justify-between text-xs mb-1.5">
-                    <span className="text-foreground/80">{item.label}</span>
-                    <span className="font-display tracking-wider text-muted-foreground">
-                      {item.percentage}%
-                    </span>
+            {errorBreakdown.length > 0 ? (
+              <div className="space-y-3 p-4 rounded-lg border border-border/40 bg-card/50">
+                {errorBreakdown.map((item) => (
+                  <div key={item.label}>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-foreground/80">{item.label}</span>
+                      <span className="font-display tracking-wider text-muted-foreground">
+                        {item.count} <span className="text-foreground/50">· {item.percentage.toFixed(1)}%</span>
+                      </span>
+                    </div>
+                    <Progress value={item.percentage} className="h-1" />
                   </div>
-                  <Progress value={item.percentage} className="h-1" />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 rounded-lg border border-border/40 bg-card/50 text-xs text-muted-foreground">
+                Nenhuma falha registrada para este funcionário.
+              </div>
+            )}
           </section>
 
           {/* Análises Recentes */}
@@ -124,27 +124,33 @@ export const EmployeeDetailsDialog = ({ employee, open, onOpenChange }: Employee
             <h3 className="font-display text-[11px] tracking-[0.3em] uppercase text-muted-foreground mb-3 flex items-center gap-2">
               <TrendingUp className="w-3.5 h-3.5" /> Análises Recentes
             </h3>
-            <div className="rounded-lg border border-border/40 bg-card/50 overflow-hidden">
-              {recentAnalyses.map((a, i) => (
-                <div
-                  key={a.id}
-                  className={`flex items-center justify-between px-4 py-3 text-xs ${
-                    i !== recentAnalyses.length - 1 ? "border-b border-border/30" : ""
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {a.result === "ok" ? (
-                      <CheckCircle2 className="w-4 h-4 text-primary" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-destructive" />
-                    )}
-                    <span className="font-display tracking-wider text-foreground/80">{a.id}</span>
-                    <span className="text-muted-foreground">{a.type}</span>
+            {recentAnalyses.length > 0 ? (
+              <div className="rounded-lg border border-border/40 bg-card/50 overflow-hidden">
+                {recentAnalyses.map((analysis, index) => (
+                  <div
+                    key={analysis.id}
+                    className={`flex items-center justify-between px-4 py-3 text-xs ${
+                      index !== recentAnalyses.length - 1 ? "border-b border-border/30" : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      {analysis.result === "ok" ? (
+                        <CheckCircle2 className="w-4 h-4 text-primary" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-destructive" />
+                      )}
+                      <span className="font-display tracking-wider text-foreground/80">{analysis.id}</span>
+                      <span className="text-muted-foreground">{analysis.type}</span>
+                    </div>
+                    <span className="text-muted-foreground text-[11px]">{analysis.time}</span>
                   </div>
-                  <span className="text-muted-foreground text-[11px]">{a.time}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 rounded-lg border border-border/40 bg-card/50 text-xs text-muted-foreground">
+                Nenhuma análise recente encontrada.
+              </div>
+            )}
           </section>
         </div>
       </DialogContent>

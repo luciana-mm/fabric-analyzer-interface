@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Play, Sun, Settings, Microscope, Layers, CheckCircle2, XCircle, Lock, BarChart3, LogOut } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import gridBg from "@/assets/grid-bg.jpg";
 import { StatsDetailsDialog } from "@/components/StatsDetailsDialog";
 import { useAuth } from "@/hooks/useAuth";
+import { buildDashboardSummary, fetchOperatorAnalyses } from "@/lib/dashboard";
 
 interface StatCardProps {
   icon: LucideIcon;
@@ -86,8 +88,23 @@ const Index = () => {
   const [statsOpen, setStatsOpen] = useState(false);
   const { signOut, user } = useAuth();
   const router = useRouter();
+  const analysesQuery = useQuery({
+    queryKey: ["operator-dashboard", user?.id],
+    queryFn: () => fetchOperatorAnalyses(user!.id),
+    enabled: !!user?.id,
+  });
+
+  const summary = buildDashboardSummary(analysesQuery.data ?? []);
 
   const isReady = calibrated && configured;
+
+  useEffect(() => {
+    if (analysesQuery.isError) {
+      toast.error("Não foi possível carregar os dados da sessão", {
+        description: analysesQuery.error instanceof Error ? analysesQuery.error.message : "Erro desconhecido",
+      });
+    }
+  }, [analysesQuery.error, analysesQuery.isError]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -159,15 +176,6 @@ const Index = () => {
         <div className="flex items-center gap-5 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? "bg-primary" : "bg-muted-foreground"}`} />
-            <span>
-              {isReady
-                ? "Sistema Pronto"
-                : !calibrated && !configured
-                ? "Aguardando Calibração e Configuração"
-                : !calibrated
-                ? "Aguardando Calibração"
-                : "Aguardando Configuração"}
-            </span>
           </div>
           {user?.email && (
             <span className="hidden md:inline text-[11px] text-muted-foreground tracking-wider">
@@ -238,21 +246,21 @@ const Index = () => {
               <StatCard
                 icon={Layers}
                 label="Tecidos Verificados"
-                value="1.248"
+                value={analysesQuery.isLoading ? "..." : summary.verified.toLocaleString("pt-BR")}
                 sublabel="total"
               />
               <StatCard
                 icon={CheckCircle2}
                 label="Taxa de Sucesso"
-                value="94.6%"
-                sublabel="1.181 ok"
+                value={analysesQuery.isLoading ? "..." : `${summary.successRate.toFixed(1)}%`}
+                sublabel={analysesQuery.isLoading ? "carregando" : `${summary.success.toLocaleString("pt-BR")} ok`}
                 accent="success"
               />
               <StatCard
                 icon={XCircle}
                 label="Taxa de Erro"
-                value="5.4%"
-                sublabel="67 falhas"
+                value={analysesQuery.isLoading ? "..." : `${summary.failureRate.toFixed(1)}%`}
+                sublabel={analysesQuery.isLoading ? "carregando" : `${summary.failure.toLocaleString("pt-BR")} falhas`}
                 accent="danger"
               />
             </div>
@@ -263,7 +271,18 @@ const Index = () => {
       {/* Bottom accent line */}
       <div className="relative z-10 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
 
-      <StatsDetailsDialog open={statsOpen} onOpenChange={setStatsOpen} />
+      <StatsDetailsDialog
+        open={statsOpen}
+        onOpenChange={setStatsOpen}
+        verified={summary.verified}
+        averageTimeLabel={summary.averageTimeLabel}
+        success={summary.success}
+        failure={summary.failure}
+        successRate={summary.successRate}
+        failureRate={summary.failureRate}
+        errorBreakdown={summary.errorBreakdown}
+        recentAnalyses={summary.recentAnalyses}
+      />
     </div>
   );
 };
