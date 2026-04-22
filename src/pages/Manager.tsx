@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Users, Layers, CheckCircle2, XCircle, TrendingUp, Award, Clock, BarChart3, LogOut, Search } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import gridBg from "@/assets/grid-bg.jpg";
 import { EmployeeDetailsDialog, Employee } from "@/components/EmployeeDetailsDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { buildEmployeeSummaries, fetchManagerData, type EmployeeSummary } from "@/lib/dashboard";
+import { toast } from "sonner";
 
 interface OverviewCardProps {
   icon: LucideIcon;
@@ -39,33 +42,83 @@ const OverviewCard = ({ icon: Icon, label, value, sublabel, accent = "default" }
   );
 };
 
-const employees: Employee[] = [
-  { id: "EMP-001", name: "Ana Souza", role: "Operadora Sênior", verified: 412, success: 398, failure: 14, avgTime: "2,1s", shift: "Manhã" },
-  { id: "EMP-002", name: "Carlos Mendes", role: "Operador", verified: 356, success: 328, failure: 28, avgTime: "2,6s", shift: "Manhã" },
-  { id: "EMP-003", name: "Beatriz Lima", role: "Operadora", verified: 289, success: 271, failure: 18, avgTime: "2,4s", shift: "Tarde" },
-  { id: "EMP-004", name: "Diego Ramos", role: "Operador Jr.", verified: 191, success: 184, failure: 7, avgTime: "2,8s", shift: "Tarde" },
-];
-
 const Manager = () => {
-  const [selected, setSelected] = useState<Employee | null>(null);
+  const [selected, setSelected] = useState<EmployeeSummary | null>(null);
   const [search, setSearch] = useState("");
   const { signOut, user } = useAuth();
   const router = useRouter();
+  const managerQuery = useQuery({
+    queryKey: ["manager-dashboard", user?.id],
+    queryFn: fetchManagerData,
+    enabled: !!user?.id,
+  });
+
+  useEffect(() => {
+    if (managerQuery.isError) {
+      toast.error("Não foi possível carregar o painel do gestor", {
+        description: managerQuery.error instanceof Error ? managerQuery.error.message : "Erro desconhecido",
+      });
+    }
+  }, [managerQuery.error, managerQuery.isError]);
+
+  const employees = useMemo(
+    () => buildEmployeeSummaries(
+      managerQuery.data?.profiles ?? [],
+      managerQuery.data?.roles ?? [],
+      managerQuery.data?.analyses ?? [],
+    ),
+    [managerQuery.data],
+  );
+
+  const metrics = useMemo(() => {
+    const totalVerified = employees.reduce((sum, employee) => sum + employee.verified, 0);
+    const totalSuccess = employees.reduce((sum, employee) => sum + employee.success, 0);
+    const totalFailure = employees.reduce((sum, employee) => sum + employee.failure, 0);
+    const successRate = totalVerified ? (totalSuccess / totalVerified) * 100 : 0;
+    const failureRate = totalVerified ? (totalFailure / totalVerified) * 100 : 0;
+
+    const activeEmployees = employees.filter((employee) => employee.active);
+    const topVolume = [...employees].sort((left, right) => right.verified - left.verified)[0] ?? null;
+    const topAccuracy = [...employees]
+      .filter((employee) => employee.verified > 0)
+      .sort((left, right) => {
+        const leftRate = (left.success / left.verified) * 100;
+        const rightRate = (right.success / right.verified) * 100;
+        return rightRate - leftRate;
+      })[0] ?? null;
+    const fastest = [...employees]
+      .filter((employee) => employee.averageProcessingMs !== null)
+      .sort((left, right) => (left.averageProcessingMs ?? Infinity) - (right.averageProcessingMs ?? Infinity))[0] ?? null;
+
+    return {
+      totalVerified,
+      totalSuccess,
+      totalFailure,
+      successRate,
+      failureRate,
+      activeEmployees,
+      topVolume,
+      topAccuracy,
+      fastest,
+    };
+  }, [employees]);
 
   const handleSignOut = async () => {
     await signOut();
     router.replace("/");
   };
 
-  const totalVerified = employees.reduce((s, e) => s + e.verified, 0);
-  const totalSuccess = employees.reduce((s, e) => s + e.success, 0);
-  const totalFailure = employees.reduce((s, e) => s + e.failure, 0);
-  const successRate = ((totalSuccess / totalVerified) * 100).toFixed(1);
-  const failureRate = ((totalFailure / totalVerified) * 100).toFixed(1);
-
   const filtered = employees.filter(
-    (e) => e.name.toLowerCase().includes(search.toLowerCase()) || e.id.toLowerCase().includes(search.toLowerCase())
+    (employee) =>
+      employee.name.toLowerCase().includes(search.toLowerCase()) ||
+      employee.id.toLowerCase().includes(search.toLowerCase()) ||
+      employee.role.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const activeCount = metrics.activeEmployees.length;
+  const topVolume = metrics.topVolume;
+  const topAccuracy = metrics.topAccuracy;
+  const fastest = metrics.fastest;
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
@@ -101,9 +154,6 @@ const Manager = () => {
             <LogOut className="w-3 h-3" />
             Sair
           </button>
-          <span className="px-4 py-1.5 rounded-full bg-muted/40 border border-border/30 font-display text-[11px] tracking-wider text-muted-foreground">
-            Gestão · v1.0.0
-          </span>
         </div>
       </header>
 
@@ -120,10 +170,32 @@ const Manager = () => {
             </div>
 
             <div className="grid grid-cols-4 gap-4">
-              <OverviewCard icon={Users} label="Funcionários Ativos" value={String(employees.length)} sublabel="hoje" />
-              <OverviewCard icon={Layers} label="Tecidos Verificados" value={totalVerified.toLocaleString("pt-BR")} sublabel="total" />
-              <OverviewCard icon={CheckCircle2} label="Taxa de Sucesso" value={`${successRate}%`} sublabel={`${totalSuccess} ok`} accent="success" />
-              <OverviewCard icon={XCircle} label="Taxa de Erro" value={`${failureRate}%`} sublabel={`${totalFailure} falhas`} accent="danger" />
+              <OverviewCard
+                icon={Users}
+                label="Funcionários Ativos"
+                value={managerQuery.isLoading ? "..." : String(activeCount)}
+                sublabel="hoje"
+              />
+              <OverviewCard
+                icon={Layers}
+                label="Tecidos Verificados"
+                value={managerQuery.isLoading ? "..." : metrics.totalVerified.toLocaleString("pt-BR")}
+                sublabel="total"
+              />
+              <OverviewCard
+                icon={CheckCircle2}
+                label="Taxa de Sucesso"
+                value={managerQuery.isLoading ? "..." : `${metrics.successRate.toFixed(1)}%`}
+                sublabel={managerQuery.isLoading ? "carregando" : `${metrics.totalSuccess.toLocaleString("pt-BR")} ok`}
+                accent="success"
+              />
+              <OverviewCard
+                icon={XCircle}
+                label="Taxa de Erro"
+                value={managerQuery.isLoading ? "..." : `${metrics.failureRate.toFixed(1)}%`}
+                sublabel={managerQuery.isLoading ? "carregando" : `${metrics.totalFailure.toLocaleString("pt-BR")} falhas`}
+                accent="danger"
+              />
             </div>
           </section>
 
@@ -158,11 +230,11 @@ const Manager = () => {
 
               {filtered.length === 0 ? (
                 <div className="px-5 py-8 text-center text-xs text-muted-foreground">
-                  Nenhum funcionário encontrado
+                  {managerQuery.isLoading ? "Carregando funcionários..." : "Nenhum funcionário encontrado"}
                 </div>
               ) : (
                 filtered.map((emp, i) => {
-                  const rate = ((emp.success / emp.verified) * 100).toFixed(1);
+                  const rate = emp.verified > 0 ? ((emp.success / emp.verified) * 100).toFixed(1) : "0,0";
                   return (
                     <button
                       key={emp.id}
@@ -215,24 +287,44 @@ const Manager = () => {
                 <div className="flex items-center gap-2 text-foreground/70 text-[10px] tracking-[0.25em] uppercase mb-3">
                   <Award className="w-3.5 h-3.5" /> Maior Volume
                 </div>
-                <p className="font-display text-lg text-foreground">{employees[0].name}</p>
-                <p className="text-xs text-muted-foreground mt-1">{employees[0].verified} tecidos verificados</p>
+                {topVolume ? (
+                  <>
+                    <p className="font-display text-lg text-foreground">{topVolume.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {topVolume.verified.toLocaleString("pt-BR")} tecidos verificados
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">Sem dados suficientes</p>
+                )}
               </div>
               <div className="p-5 rounded-xl border border-border/30 bg-card/40 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-primary text-[10px] tracking-[0.25em] uppercase mb-3">
                   <TrendingUp className="w-3.5 h-3.5" /> Melhor Taxa
                 </div>
-                <p className="font-display text-lg text-foreground">{employees[3].name}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {((employees[3].success / employees[3].verified) * 100).toFixed(1)}% de aprovação
-                </p>
+                {topAccuracy ? (
+                  <>
+                    <p className="font-display text-lg text-foreground">{topAccuracy.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {((topAccuracy.success / topAccuracy.verified) * 100).toFixed(1)}% de aprovação
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">Sem dados suficientes</p>
+                )}
               </div>
               <div className="p-5 rounded-xl border border-border/30 bg-card/40 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-foreground/70 text-[10px] tracking-[0.25em] uppercase mb-3">
                   <Clock className="w-3.5 h-3.5" /> Mais Rápido
                 </div>
-                <p className="font-display text-lg text-foreground">{employees[0].name}</p>
-                <p className="text-xs text-muted-foreground mt-1">{employees[0].avgTime} por análise</p>
+                {fastest ? (
+                  <>
+                    <p className="font-display text-lg text-foreground">{fastest.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{fastest.avgTime} por análise</p>
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">Sem dados suficientes</p>
+                )}
               </div>
             </div>
           </section>
@@ -243,6 +335,8 @@ const Manager = () => {
 
       <EmployeeDetailsDialog
         employee={selected}
+        errorBreakdown={selected?.errorBreakdown ?? []}
+        recentAnalyses={selected?.recentAnalyses ?? []}
         open={!!selected}
         onOpenChange={(o) => !o && setSelected(null)}
       />
