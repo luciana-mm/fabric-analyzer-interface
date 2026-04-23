@@ -72,6 +72,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../src/app/painel/camera/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/painel/camera">> = Specific
+  const handler = {} as typeof import("../../src/app/painel/camera/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/painel/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/painel">> = Specific
@@ -91,6 +100,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 }
 
 
+
+// Validate ../../src/pages/CameraStream.tsx
+{
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
+  const handler = {} as typeof import("../../src/pages/CameraStream.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
 
 // Validate ../../src/pages/Index.tsx
 {
