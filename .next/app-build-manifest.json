@@ -16,10 +16,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/painel/page.js"
     ],
-    "/painel/camera/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/painel/camera/page.js"
+      "static/chunks/app/page.js"
+    ],
+    "/painel/config/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/config/page.js"
     ]
   }
 }

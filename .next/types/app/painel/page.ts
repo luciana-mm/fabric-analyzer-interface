@@ -1,4 +1,4 @@
-// File: C:\Users\unesc\Documents\fabric-analyzer-interface\src\app\painel\page.tsx
+// File: C:\Users\unesc\Documents\keven\fabric-analyzer-interface\src\app\painel\page.tsx
 import * as entry from '../../../../src/app/painel/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
