@@ -1,5 +1,8 @@
 {
   "/painel/page": "app/painel/page.js",
-  "/page": "app/page.js",
-  "/painel/config/page": "app/painel/config/page.js"
+  "/painel/config/page": "app/painel/config/page.js",
+  "/painel/config/capturar-cor/page": "app/painel/config/capturar-cor/page.js",
+  "/painel/calibrar-luz/page": "app/painel/calibrar-luz/page.js",
+  "/painel/config/tolerancia-delta-e/page": "app/painel/config/tolerancia-delta-e/page.js",
+  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js"
 }
