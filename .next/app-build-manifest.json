@@ -16,15 +16,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/painel/page.js"
     ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
     "/painel/config/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/painel/config/page.js"
+    ],
+    "/painel/config/capturar-cor/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/config/capturar-cor/page.js"
+    ],
+    "/painel/calibrar-luz/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/calibrar-luz/page.js"
+    ],
+    "/painel/config/tolerancia-delta-e/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/config/tolerancia-delta-e/page.js"
+    ],
+    "/painel/config/area-analise/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/config/area-analise/page.js"
     ]
   }
 }
