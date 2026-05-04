@@ -1,5 +1,6 @@
 {
   "/page": "app/page.js",
-  "/painel/page": "app/painel/page.js",
-  "/gestor/page": "app/gestor/page.js"
+  "/painel/camera/page": "app/painel/camera/page.js",
+  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js",
+  "/painel/page": "app/painel/page.js"
 }
