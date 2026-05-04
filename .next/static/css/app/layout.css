@@ -2251,6 +2251,10 @@ body{
 .ring-offset-background{
   --tw-ring-offset-color: hsl(var(--background));
 }
+.drop-shadow-\[0_0_4px_rgba\(0\2c 0\2c 0\2c 1\)\]{
+  --tw-drop-shadow: drop-shadow(0 0 4px rgba(0,0,0,1));
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
 .filter{
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
