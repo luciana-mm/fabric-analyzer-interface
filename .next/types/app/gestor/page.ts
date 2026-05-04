@@ -1,4 +1,4 @@
-// File: C:\Users\lucia\fabric-analyzer-interface\src\app\gestor\page.tsx
+// File: C:\Users\unesc\Documents\keven\fabric-analyzer-interface\src\app\gestor\page.tsx
 import * as entry from '../../../../src/app/gestor/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
