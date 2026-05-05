@@ -1,10 +1,7 @@
 {
   "/painel/analise/page": "app/painel/analise/page.js",
   "/page": "app/page.js",
-  "/painel/config/page": "app/painel/config/page.js",
-  "/gestor/page": "app/gestor/page.js",
-  "/gestor/funcionarios/page": "app/gestor/funcionarios/page.js",
-  "/painel/page": "app/painel/page.js",
-  "/painel/config/tolerancia-delta-e/page": "app/painel/config/tolerancia-delta-e/page.js",
-  "/painel/config/capturar-cor/page": "app/painel/config/capturar-cor/page.js"
+  "/painel/camera/page": "app/painel/camera/page.js",
+  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js",
+  "/painel/page": "app/painel/page.js"
 }

@@ -21,35 +21,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/painel/page.js"
     ],
+    "/painel/camera/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/painel/camera/page.js"
+    ],
     "/painel/config/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/painel/config/page.js"
     ],
-    "/page": [
+    "/painel/config/area-analise/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
-    "/gestor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/gestor/page.js"
-    ],
-    "/gestor/funcionarios/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/gestor/funcionarios/page.js"
-    ],
-    "/painel/config/tolerancia-delta-e/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/config/tolerancia-delta-e/page.js"
-    ],
-    "/painel/config/capturar-cor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/config/capturar-cor/page.js"
+      "static/chunks/app/painel/config/area-analise/page.js"
     ]
   }
 }
