@@ -1576,12 +1576,12 @@ body{
 .border-t-transparent{
   border-top-color: transparent;
 }
-.bg-\[\#0a0c1481\]\/90{
-  background-color: rgb(10 12 20 / 0.9);
-}
 .bg-\[\#0a0c14\]{
   --tw-bg-opacity: 1;
   background-color: rgb(10 12 20 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#0a0c14\]\/90{
+  background-color: rgb(10 12 20 / 0.9);
 }
 .bg-\[\#11141f\]{
   --tw-bg-opacity: 1;

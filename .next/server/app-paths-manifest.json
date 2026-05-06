@@ -1,13 +1,7 @@
 {
   "/painel/page": "app/painel/page.js",
-  "/painel/config/page": "app/painel/config/page.js",
+  "/painel/config/tolerancia-delta-e/page": "app/painel/config/tolerancia-delta-e/page.js",
   "/painel/calibrar-luz/page": "app/painel/calibrar-luz/page.js",
-  "/painel/config/capturar-cor/page": "app/painel/config/capturar-cor/page.js",
-  "/page": "app/page.js",
-<<<<<<< HEAD
+  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js",
   "/painel/analise/page": "app/painel/analise/page.js"
-=======
-  "/painel/page": "app/painel/page.js",
-  "/painel/config/page": "app/painel/config/page.js"
->>>>>>> 9e6ab185c6822132a0b708132a8d4622a1b0411e
 }
