@@ -21,20 +21,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/painel/page.js"
     ],
-    "/painel/camera/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/camera/page.js"
-    ],
     "/painel/config/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/painel/config/page.js"
-    ],
-    "/painel/config/area-analise/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/config/area-analise/page.js"
     ]
   }
 }
