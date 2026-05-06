@@ -545,6 +545,7 @@ video {
 
     --glow-primary: 0 0 20px hsl(232 10% 92% / 0.15);
     --glow-strong: 0 0 30px hsl(232 10% 92% / 0.25);
+    --glow-box: 0 0 10px hsl(232 10% 95% / 0.25);
 
     --font-sansserief: 'Orbitron', monospace;
     --font-body: 'Inter', sans-serif;
@@ -647,6 +648,9 @@ body{
 .left-\[50\%\]{
   left: 50%;
 }
+.left-full{
+  left: 100%;
+}
 .right-0{
   right: 0px;
 }
@@ -661,6 +665,9 @@ body{
 }
 .right-4{
   right: 1rem;
+}
+.right-full{
+  right: 100%;
 }
 .top-0{
   top: 0px;
@@ -787,6 +794,9 @@ body{
 }
 .ml-1{
   margin-left: 0.25rem;
+}
+.ml-3{
+  margin-left: 0.75rem;
 }
 .ml-auto{
   margin-left: auto;
@@ -1206,6 +1216,9 @@ body{
      -moz-user-select: none;
           user-select: none;
 }
+.list-inside{
+  list-style-position: inside;
+}
 .list-disc{
   list-style-type: disc;
 }
@@ -1368,6 +1381,9 @@ body{
 .break-words{
   overflow-wrap: break-word;
 }
+.rounded{
+  border-radius: 0.25rem;
+}
 .rounded-2xl{
   border-radius: 1rem;
 }
@@ -1429,6 +1445,9 @@ body{
 .border-2{
   border-width: 2px;
 }
+.border-8{
+  border-width: 8px;
+}
 .border-\[1\.5px\]{
   border-width: 1.5px;
 }
@@ -1456,9 +1475,6 @@ body{
 }
 .border-\[--color-border\]{
   border-color: var(--color-border);
-}
-.border-blue-600\/60{
-  border-color: rgb(37 99 235 / 0.6);
 }
 .border-blue-700{
   --tw-border-opacity: 1;
@@ -1538,6 +1554,10 @@ body{
 }
 .border-l-transparent{
   border-left-color: transparent;
+}
+.border-r-slate-800{
+  --tw-border-opacity: 1;
+  border-right-color: rgb(30 41 59 / var(--tw-border-opacity, 1));
 }
 .border-t-transparent{
   border-top-color: transparent;
@@ -1720,6 +1740,11 @@ body{
   --tw-gradient-to: hsl(var(--background) / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.from-background\/90{
+  --tw-gradient-from: hsl(var(--background) / 0.9) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--background) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .from-black\/80{
   --tw-gradient-from: rgb(0 0 0 / 0.8) var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
@@ -1739,6 +1764,10 @@ body{
   --tw-gradient-from: rgb(255 255 255 / 0.95) var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.via-background\/40{
+  --tw-gradient-to: hsl(var(--background) / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--background) / 0.4) var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
 .via-background\/95{
   --tw-gradient-to: hsl(var(--background) / 0)  var(--tw-gradient-to-position);
@@ -1870,6 +1899,9 @@ body{
 .py-8{
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.pb-1{
+  padding-bottom: 0.25rem;
 }
 .pb-3{
   padding-bottom: 0.75rem;
@@ -2043,6 +2075,10 @@ body{
 .text-blue-300{
   --tw-text-opacity: 1;
   color: rgb(147 197 253 / var(--tw-text-opacity, 1));
+}
+.text-blue-400{
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity, 1));
 }
 .text-blue-500{
   --tw-text-opacity: 1;
@@ -2322,6 +2358,9 @@ body{
 .duration-300{
   transition-duration: 300ms;
 }
+.duration-500{
+  transition-duration: 500ms;
+}
 .ease-in-out{
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2375,6 +2414,9 @@ body{
 .duration-300{
   animation-duration: 300ms;
 }
+.duration-500{
+  animation-duration: 500ms;
+}
 .ease-in-out{
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2389,6 +2431,9 @@ body{
   }
 .glow-primary {
     box-shadow: var(--glow-primary);
+  }
+.glow-box {
+    box-shadow: var(--glow-box);
   }
 
 .file\:border-0::file-selector-button{
@@ -2781,6 +2826,10 @@ body{
   opacity: 1;
 }
 
+.group:hover .group-hover\:block{
+  display: block;
+}
+
 .group:hover .group-hover\:bg-foreground\/10{
   background-color: hsl(var(--foreground) / 0.1);
 }
@@ -2793,12 +2842,21 @@ body{
   color: hsl(var(--foreground));
 }
 
+.group:hover .group-hover\:text-slate-100{
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+
 .group\/menu-item:hover .group-hover\/menu-item\:opacity-100{
   opacity: 1;
 }
 
 .group:hover .group-hover\:opacity-100{
   opacity: 1;
+}
+
+.group:hover .group-hover\:opacity-40{
+  opacity: 0.4;
 }
 
 .group:hover .group-hover\:drop-shadow-\[0_0_6px_hsl\(185_70\%_50\%\/0\.6\)\]{
