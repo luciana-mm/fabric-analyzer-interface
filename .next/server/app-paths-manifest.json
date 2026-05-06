@@ -1,7 +1,8 @@
 {
-  "/painel/analise/page": "app/painel/analise/page.js",
+  "/painel/page": "app/painel/page.js",
+  "/painel/config/page": "app/painel/config/page.js",
+  "/painel/calibrar-luz/page": "app/painel/calibrar-luz/page.js",
+  "/painel/config/capturar-cor/page": "app/painel/config/capturar-cor/page.js",
   "/page": "app/page.js",
-  "/painel/camera/page": "app/painel/camera/page.js",
-  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js",
-  "/painel/page": "app/painel/page.js"
+  "/painel/analise/page": "app/painel/analise/page.js"
 }
