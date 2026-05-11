@@ -25,16 +25,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/painel/config/area-analise/page.js"
-    ],
-    "/painel/config/capturar-cor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/config/capturar-cor/page.js"
-    ],
-    "/painel/camera/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/painel/camera/page.js"
     ]
   }
 }
