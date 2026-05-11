@@ -1,7 +1,0 @@
-{
-  "/painel/page": "app/painel/page.js",
-  "/painel/config/tolerancia-delta-e/page": "app/painel/config/tolerancia-delta-e/page.js",
-  "/painel/calibrar-luz/page": "app/painel/calibrar-luz/page.js",
-  "/painel/config/area-analise/page": "app/painel/config/area-analise/page.js",
-  "/painel/analise/page": "app/painel/analise/page.js"
-}
